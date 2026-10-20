@@ -1,0 +1,1683 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Museum Virtual SMANERE</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0a1626;
+        --pn: #0e2038;
+        --pn2: #14304f;
+        --lo: #06101d;
+        --ac: #8ec5ff;
+        --ac2: #4f9be8;
+        --tx: #e6eefa;
+        --mu: #a9bbd4;
+        --ol: #6b829f;
+        --gold: #d4af37;
+        --pad-t: env(safe-area-inset-top, 0px);
+        --pad-b: env(safe-area-inset-bottom, 0px);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: auto;
+      }
+      body {
+        background: var(--bg);
+        color: var(--tx);
+        font:
+          14px/22px Inter,
+          sans-serif;
+        overflow-x: hidden;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        border: 0;
+        background: none;
+        cursor: pointer;
+      }
+      .hd,
+      .ft {
+        position: fixed;
+        left: 0;
+        width: 100%;
+        z-index: 50;
+        background: rgba(6, 16, 29, 0.93);
+        backdrop-filter: blur(10px);
+      }
+      .hd {
+        top: 0;
+        padding-top: var(--pad-t);
+        box-shadow: 0 1px 8px #000a;
+      }
+      .ft {
+        bottom: 0;
+        padding-bottom: var(--pad-b);
+        box-shadow: 0 -1px 12px #000b;
+      }
+      .row {
+        height: 80px;
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .lb {
+        font: 600 10px/14px Inter;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .os {
+        font-family: Oswald, sans-serif;
+        text-transform: uppercase;
+      }
+      .ac {
+        color: var(--ac);
+      }
+      .mu {
+        color: var(--mu);
+      }
+      .ol {
+        color: var(--ol);
+      }
+      .logo {
+        width: 40px;
+        height: 40px;
+        background: var(--ac2);
+        display: grid;
+        place-items: center;
+        font: 700 14px Oswald;
+        letter-spacing: 0.1em;
+        color: #fff;
+      }
+      .brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .brand b {
+        font: 500 18px/22px Oswald;
+        letter-spacing: 0.06em;
+        display: block;
+      }
+      .nav {
+        display: flex;
+        gap: 4px;
+      }
+      .nav a {
+        padding: 8px 14px;
+        font: 500 13px Oswald;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--mu);
+        text-decoration: none;
+      }
+      .nav a.on,
+      .nav a:hover {
+        background: var(--pn2);
+        color: var(--ac);
+      }
+      .chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        background: var(--pn);
+      }
+      .chip:hover {
+        background: var(--pn2);
+        color: var(--ac);
+      }
+      .chip.on {
+        background: var(--pn2);
+        color: var(--ac);
+      }
+      .wv i {
+        animation-play-state: paused;
+      }
+      .wv.play i {
+        animation-play-state: running;
+      }
+      .av {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--ac2);
+        display: grid;
+        place-items: center;
+      }
+      main {
+        padding: 80px 0 80px;
+      }
+      #stage {
+        position: relative;
+        min-height: 800px;
+        padding: 96px 0 170px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        overflow: hidden;
+        background: linear-gradient(90deg, #071221, #123a63 45%, #091a2f) 0 0/220% 100%;
+        transition: background-position 1s ease;
+      }
+      .rail {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 12px;
+        background: var(--lo);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 30;
+      }
+      .rail i {
+        width: 32px;
+        height: 8px;
+        background: var(--pn2);
+      }
+      .lamp {
+        position: absolute;
+        top: 12px;
+        width: 16px;
+        height: 24px;
+        background: var(--pn2);
+        border-radius: 0 0 4px 4px;
+        z-index: 30;
+      }
+      .cone {
+        position: absolute;
+        top: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          ellipse at 50% 0,
+          rgba(210, 232, 255, 0.25),
+          rgba(60, 130, 210, 0.14) 45%,
+          transparent 75%
+        );
+      }
+      .hud {
+        position: absolute;
+        top: 24px;
+        left: 0;
+        right: 0;
+        z-index: 40;
+        padding: 0 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        pointer-events: none;
+        flex-wrap: wrap;
+      }
+      .hud > div {
+        pointer-events: auto;
+        background: rgba(6, 16, 29, 0.88);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 8px 24px #0008;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .badge {
+        padding: 8px 16px;
+        border-left: 2px solid var(--ac);
+      }
+      .tb {
+        padding: 6px;
+        gap: 6px;
+      }
+      .tb button {
+        padding: 6px 12px;
+        background: var(--pn);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .tb button:hover,
+      .tb .on {
+        background: var(--pn2);
+        color: var(--ac);
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ac);
+        animation: p 1.5s infinite;
+      }
+      @keyframes p {
+        50% {
+          opacity: 0.3;
+        }
+      }
+      .arr {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 40;
+        width: 48px;
+        height: 80px;
+        background: rgba(6, 16, 29, 0.88);
+        font-size: 30px;
+        opacity: 0.85;
+      }
+      .arr-l {
+        left: 0;
+      }
+      .arr-r {
+        right: 0;
+      }
+      .arr:hover {
+        background: var(--ac2);
+        opacity: 1;
+      }
+      #vp {
+        width: 100%;
+        max-width: 1280px;
+        padding: 0 56px;
+        display: flex;
+        gap: 48px;
+        align-items: flex-start;
+        justify-content: center;
+        transition: transform 0.3s;
+        z-index: 20;
+      }
+      #vp > * {
+        transition:
+          transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+          opacity 0.5s;
+      }
+      #vp > .plq {
+        transition-delay: 0.08s;
+      }
+      #vp > .wall {
+        transition-delay: 0.16s;
+      }
+      #vp.h > * {
+        opacity: 0;
+        transition-delay: 0s;
+      }
+      #vp.h > .plq {
+        transform: translateX(calc(var(--dx, 0px) * 1.6));
+      }
+      #vp.h > .fr {
+        transform: translateX(var(--dx, 0px));
+      }
+      #vp.h > .wall {
+        transform: translateX(calc(var(--dx, 0px) * 0.6));
+      }
+      #vp.nt > * {
+        transition: none !important;
+      }
+      @media (min-width: 1024px) {
+        #vp[data-l="1"] > .fr {
+          order: -1;
+        }
+        #vp[data-l="2"] > .fr {
+          order: 3;
+        }
+      }
+      .gh {
+        position: absolute;
+        top: 150px;
+        width: 190px;
+        height: 250px;
+        z-index: 5;
+        padding: 8px;
+        opacity: 0.38;
+        filter: blur(1.5px) brightness(0.8);
+        cursor: pointer;
+        background: linear-gradient(135deg, #d4af37, #997a15, #f3e5ab);
+        transition: opacity 0.3s;
+        display: none;
+      }
+      .gh:hover {
+        opacity: 0.7;
+      }
+      .gh img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      #gP {
+        left: -70px;
+        transform: perspective(600px) rotateY(28deg);
+      }
+      #gN {
+        right: -70px;
+        transform: perspective(600px) rotateY(-28deg);
+      }
+      @media (min-width: 1100px) {
+        .gh {
+          display: block;
+        }
+      }
+      .plq {
+        width: 288px;
+        flex: none;
+        padding-top: 56px;
+      }
+      .plq > div {
+        background: rgba(6, 16, 29, 0.88);
+        padding: 20px;
+        border-left: 2px solid var(--ac);
+        box-shadow: 0 20px 50px #000a;
+      }
+      .plq h3 {
+        font: 500 20px/26px Oswald;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin: 4px 0;
+      }
+      .plq .ft2 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid var(--pn2);
+        padding-top: 12px;
+        margin-top: 16px;
+      }
+      .fr {
+        flex: none;
+        position: relative;
+        cursor: pointer;
+      }
+      .f1 {
+        padding: 20px;
+        background: linear-gradient(135deg, #d4af37, #997a15, #f3e5ab);
+        box-shadow: 0 30px 70px #000d;
+        outline: 4px solid #543d0b;
+        transition: transform 0.3s;
+      }
+      .fr:hover .f1 {
+        transform: scale(1.01);
+      }
+      .f2 {
+        padding: 12px;
+        background: linear-gradient(315deg, #7a5c0b, #e5c158, #543d0b);
+      }
+      .f3 {
+        padding: 8px;
+        background: #0b1020;
+      }
+      .cv {
+        position: relative;
+        width: 350px;
+        height: 470px;
+        overflow: hidden;
+        background: var(--lo);
+      }
+      .cv img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.7s;
+      }
+      .fr:hover .cv img {
+        transform: scale(1.05);
+      }
+      .cv .t1,
+      .cv .t2 {
+        position: absolute;
+        background: rgba(6, 16, 29, 0.85);
+        padding: 2px 10px;
+      }
+      .t1 {
+        top: 12px;
+        left: 12px;
+        border: 1px solid rgba(142, 197, 255, 0.4);
+      }
+      .t2 {
+        bottom: 12px;
+        right: 12px;
+        padding: 4px 12px;
+      }
+      .wall {
+        flex: 1;
+        max-width: 576px;
+        padding-top: 40px;
+      }
+      .wall h2 {
+        font: 700 44px/48px Oswald;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: #fff;
+        margin: 8px 0 20px;
+        text-shadow: 0 2px 6px #0008;
+      }
+      .cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        color: #dbe8fa;
+        font-size: 12px;
+        line-height: 18px;
+        text-align: justify;
+        margin-bottom: 24px;
+      }
+      .tag {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-top: 10px;
+      }
+      .tag:before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: var(--ac);
+      }
+      #ms {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 24px;
+      }
+      #ms span {
+        padding: 4px 10px;
+        background: var(--pn2);
+        border: 1px solid rgba(107, 130, 159, 0.4);
+        font: 600 10px/14px Inter;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      #ms span:first-child {
+        color: var(--ac);
+        border-color: rgba(142, 197, 255, 0.35);
+      }
+      .meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        border-top: 1px solid var(--pn2);
+        padding-top: 12px;
+        color: var(--ol);
+      }
+      .floor {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 96px;
+        background: linear-gradient(#0d1520, #0a1018, #04070c);
+        border-top: 4px solid #1d3550;
+        z-index: 10;
+      }
+      .floor:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        opacity: 0.35;
+        background: repeating-linear-gradient(90deg, #000 0 2px, transparent 2px 64px);
+      }
+      .floor:after {
+        content: "";
+        position: absolute;
+        top: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 384px;
+        height: 48px;
+        background: rgba(142, 197, 255, 0.14);
+        filter: blur(24px);
+        border-radius: 50%;
+      }
+      .tl {
+        position: fixed;
+        bottom: calc(88px + var(--pad-b));
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 40;
+        width: 91%;
+        max-width: 1024px;
+        background: rgba(6, 16, 29, 0.95);
+        backdrop-filter: blur(8px);
+        padding: 10px 12px;
+        box-shadow: 0 10px 35px #000d;
+        border-top: 1px solid rgba(142, 197, 255, 0.3);
+      }
+      .tlh {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      #sb {
+        position: relative;
+        height: 10px;
+        background: var(--pn2);
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: repeat(10, minmax(0, 1fr));
+        align-items: center;
+        padding: 0;
+      }
+      #sf {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        background: var(--ac2);
+        transition: width 0.3s;
+      }
+      #sb button {
+        position: relative;
+        z-index: 2;
+        justify-self: center;
+        width: 12px;
+        height: 12px;
+        transform: rotate(45deg);
+        background: #355273;
+        box-shadow: 0 0 0 2px var(--lo);
+        transition: 0.2s;
+      }
+      #sb button:hover {
+        background: var(--ac);
+      }
+      #sb button.on {
+        background: var(--ac);
+        transform: rotate(45deg) scale(1.25);
+      }
+      #sb button.pa {
+        background: var(--ac2);
+      }
+      #lbs {
+        display: grid;
+        grid-template-columns: repeat(10, minmax(0, 1fr));
+        gap: 0;
+        text-align: center;
+        padding-top: 4px;
+      }
+
+      #lbs button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        min-width: 0;
+        padding: 0;
+        color: var(--ol);
+        font: 600 11px/16px Inter, sans-serif;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+      }
+
+      #lbs button:hover,
+      #lbs button.on {
+        color: var(--ac);
+      }
+
+      #lbs button.on {
+        font-weight: 700;
+      }
+      .mo {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .mo.s {
+        display: flex;
+      }
+      .mb {
+        width: 100%;
+        max-width: 1024px;
+        max-height: 90vh;
+        overflow: auto;
+        background: var(--lo);
+        border-left: 4px solid var(--ac);
+        box-shadow: 0 25px 60px #000e;
+      }
+      .mh {
+        padding: 16px 24px;
+        background: #0b1a2e;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--pn2);
+      }
+      .mh h2 {
+        font: 500 28px/34px Oswald;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .x {
+        width: 40px;
+        height: 40px;
+        background: var(--pn);
+        font-size: 20px;
+      }
+      .x:hover {
+        background: var(--ac2);
+      }
+      .mc {
+        padding: 32px;
+        display: grid;
+        grid-template-columns: 7fr 5fr;
+        gap: 32px;
+      }
+      .mi {
+        height: 380px;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border: 1px solid rgba(107, 130, 159, 0.4);
+      }
+      .mi img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.3s;
+      }
+      .mi:hover img {
+        transform: scale(1.25);
+      }
+      .au {
+        background: var(--pn);
+        padding: 16px;
+        margin-top: 12px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .au b {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--ac);
+        color: #06101d;
+        display: grid;
+        place-items: center;
+      }
+      .wv {
+        flex: 1;
+        display: flex;
+        align-items: flex-end;
+        gap: 4px;
+        height: 32px;
+      }
+      .wv i {
+        width: 4px;
+        background: var(--ac);
+        animation: w 1s infinite alternate;
+      }
+      @keyframes w {
+        to {
+          height: 6px;
+        }
+      }
+      .tbl {
+        background: #0b1a2e;
+        padding: 16px;
+        border-left: 2px solid rgba(142, 197, 255, 0.5);
+        font-size: 12px;
+        margin: 16px 0;
+      }
+      .tbl div {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 4px 0;
+        border-bottom: 1px solid var(--pn2);
+      }
+      .tbl div:last-child {
+        border: 0;
+      }
+      .btn {
+        padding: 10px 20px;
+        background: var(--ac);
+        color: #06101d;
+        font: 700 10px Inter;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .btn.g {
+        background: var(--pn);
+        color: var(--tx);
+        font-weight: 600;
+      }
+      .ftl {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+      }
+      .ftl button {
+        width: 32px;
+        height: 32px;
+        background: var(--pn);
+      }
+      .ftl button:hover {
+        color: var(--ac);
+      }
+      .tlf {
+        position: relative;
+        height: 4px;
+        background: var(--ac2);
+        margin-top: 4px;
+      }
+      .yrs {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: var(--ol);
+      }
+      @media (max-width: 1023px) {
+        .nav,
+        .hide-m {
+          display: none;
+        }
+        #vp {
+          flex-direction: column;
+          align-items: center;
+          gap: 24px;
+          padding: 0 20px;
+        }
+        .plq {
+          width: 100%;
+          max-width: 400px;
+          padding-top: 0;
+        }
+        .wall {
+          padding-top: 0;
+        }
+        .wall h2 {
+          font-size: 28px;
+          line-height: 32px;
+        }
+        .mc {
+          grid-template-columns: 1fr;
+        }
+        .cv {
+          width: 300px;
+          height: 400px;
+        }
+        #stage {
+          padding-top: 110px;
+          min-height: 0;
+        }
+        .row {
+          padding: 0 12px;
+        }
+        .hud {
+          padding: 0 12px;
+        }
+        .arr {
+          width: 36px;
+          height: 60px;
+        }
+        .cols {
+          grid-template-columns: 1fr;
+        }
+        .tl {
+          padding: 10px 12px;
+        }
+        #lbs {
+          display: none;
+        }
+        .ft .yrs,
+        .ft .mid {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== HEADER ===== -->
+    <header class="hd">
+      <div class="row">
+        <div class="brand">
+          <img src="/images/logo.png" alt="Logo SMAN 1 Turen" width="40" height="40" onerror="this.outerHTML='<div class=logo>SVM</div>'" />
+          <div>
+            <b>MUSEUM VIRTUAL SMANERE</b
+            ><span class="lb ac">SMA Negeri 1 Turen – Arsip Sejarah &amp; Warisan</span>
+          </div>
+        </div>
+        <nav class="nav">
+          <a class="on" href="#">Galeri</a><a href="#">Ruang Pameran</a><a href="#">Arsip Dokumen</a
+          ><a href="#">Lini Masa</a>
+        </nav>
+        <div style="display: flex; gap: 12px; align-items: center">
+          <button class="chip lb" id="bAud">🎧 <span class="hide-m">Panduan Audio</span></button
+          ><button class="chip lb" id="bMap">🗺 <span class="hide-m">Denah Ruangan</span></button>
+          <div class="av">👤</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== KONTEN UTAMA: GALERI ===== -->
+    <main>
+      <section id="stage">
+        <div class="rail"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="lamp" style="left: 240px"></div>
+        <div class="lamp" style="left: 50%"></div>
+        <div class="lamp" style="right: 240px"></div>
+        <div class="cone" style="left: calc(50% - 260px); width: 560px; height: 720px"></div>
+        <div class="cone" style="right: 25%; width: 650px; height: 700px"></div>
+        <!-- ===== HUD ATAS GALERI ===== -->
+        <div class="hud">
+          <div class="badge">
+            <span class="dot"></span><span class="lb ac">Eksibisi 8 Kepala Sekolah</span
+            ><span class="ol">•</span><span class="lb mu" id="cnt"></span>
+          </div>
+          <div class="tb">
+            <button class="lb" id="bAuto">▶ <span>Jalan Otomatis</span></button
+            ><button class="lb" id="bAmb">🔇 <span class="hide-m">Suara Ambien Ruang</span></button
+            ><button class="lb" id="bZoom">🔍 <span id="zs">Skala 100%</span></button
+            ><button id="bHelp">ⓘ</button>
+          </div>
+        </div>
+        <button class="arr arr-l" id="L" aria-label="Sebelumnya">‹</button
+        ><button class="arr arr-r" id="R" aria-label="Berikutnya">›</button>
+
+        <!-- ===== PIGURA SAMPING (COVERFLOW) ===== -->
+        <div class="gh" id="gP" onclick="go(cur-1)"><img id="gPi" alt="" /></div>
+        <div class="gh" id="gN" onclick="go(cur+1)"><img id="gNi" alt="" /></div>
+        <!-- ===== SLIDE: PLAKAT, PIGURA, TEKS ===== -->
+        <div id="vp">
+          <div class="plq">
+            <div>
+              <div style="display: flex; justify-content: space-between">
+                <span class="lb ac" id="pCat"></span><span class="ac">✔</span>
+              </div>
+              <h3 id="pName"></h3>
+              <p class="lb ac" id="pPer" style="margin-bottom: 12px"></p>
+              <p class="mu" style="font-size: 12px; line-height: 18px" id="pBrief"></p>
+              <div class="ft2">
+                <span class="lb ol" id="pDim"></span
+                ><button class="lb ac" onclick="openM()">Periksa Detail (4K) 🔍</button>
+              </div>
+            </div>
+          </div>
+          <div class="fr" onclick="openM()">
+            <div class="f1">
+              <div class="f2">
+                <div class="f3">
+                  <div class="cv">
+                    <img id="img" alt="Potret Kepala Sekolah" />
+                    <div class="t1 lb ac" id="tTerm"></div>
+                    <div class="t2 lb ac">☝ Buka Berkas Arsip</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="wall">
+            <span class="lb ac" id="eyb"></span>
+            <h2 id="hl"></h2>
+            <div class="cols">
+              <div>
+                <p id="n1"></p>
+                <div class="tag"><span class="lb ac" id="cur"></span></div>
+              </div>
+              <div>
+                <p id="n2"></p>
+                <div class="tag"><span class="lb ac" id="reg"></span></div>
+              </div>
+            </div>
+            <div id="ms"></div>
+            <div class="meta lb">
+              <span>Suhu: 20.5°C</span><span>Kelembapan: 48% RH</span><span>Pencahayaan: 50 Lux</span
+              ><span class="ac">Standar Preservasi 4K</span>
+            </div>
+          </div>
+        </div>
+        <div class="floor"></div>
+        <!-- ===== LINI MASA BAWAH ===== -->
+        <div class="tl">
+          <div class="tlh lb">
+            <span>🧭 Lini Masa Kepemimpinan</span
+            ><span class="ac hide-m">Gunakan panah [← / →] atau klik checkpoint</span
+            ><span class="ac" id="hs"></span>
+          </div>
+          <div id="sb"><div id="sf"></div></div>
+          <div id="lbs"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="ft">
+      <div class="row">
+        <div style="display: flex; gap: 16px; align-items: center">
+          <div>
+            <span class="lb ac" style="display: block">Ruang Eksibisi Aktif</span
+            ><span class="os" style="font-size: 18px">AULA KEPALA SEKOLAH (1991–SEKARANG)</span>
+          </div>
+          <div class="ftl"><button onclick="L.click()">‹</button><button onclick="R.click()">›</button></div>
+        </div>
+        <div class="mid hide-m" style="flex: 1; max-width: 576px; padding: 0 16px">
+          <span class="lb ol">SMA Negeri 1 Turen • Museum Virtual SMANERE</span
+          ><span class="lb ol">•</span><span class="lb ol">© 2024 • All Rights Reserved</span>
+        </div>
+        <div style="display: flex; gap: 4px; background: var(--pn); padding: 4px">
+          <button class="chip lb ac">👁 Dinding</button
+          ><button class="chip lb" style="background: none">⬚ Pusat</button
+          ><button class="chip lb" style="background: none" onclick="openM()">Plakat 4K</button>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ===== MODAL DETAIL 4K ===== -->
+    <div class="mo" id="mod">
+      <div class="mb">
+        <div class="mh">
+          <div>
+            <span class="lb ac" id="mAcc" style="display: block"></span>
+            <h2 id="mTit"></h2>
+          </div>
+          <button class="x" onclick="closeM()">✕</button>
+        </div>
+        <div class="mc">
+          <div>
+            <div class="mi"><img id="mImg" alt="" /></div>
+            <div class="au">
+              <b id="mPlay" onclick="toggleAudio()" style="cursor: pointer">▶</b><span class="lb" style="flex: 1">Ulasan Narasi Kurator Sejarah SMANERE</span>
+              <div class="wv" id="wv"></div>
+              <span class="lb ol" id="mTime">Siap diputar</span>
+            </div>
+          </div>
+          <div>
+            <span class="lb ac">Konteks Kuratorial &amp; Prestasi</span>
+            <p class="mu" style="text-align: justify; margin-top: 4px" id="mDesc"></p>
+            <div class="tbl">
+              <div><span class="ol lb">Jabatan &amp; Nama:</span><span id="mPer"></span></div>
+              <div><span class="ol lb">Masa Bakti:</span><span id="mPrd"></span></div>
+              <div>
+                <span class="ol lb">Media Rekaman:</span><span>Kanvas linen &amp; berkas naskah SK</span>
+              </div>
+              <div>
+                <span class="ol lb">Status Konservasi:</span
+                ><span class="ac">Tingkat A-1 (Terestorasi 2024)</span>
+              </div>
+              <div>
+                <span class="ol lb">Penempatan Arsip:</span><span>Ruang Utama • Galeri Kepemimpinan</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px">
+              <button class="btn" style="flex: 1">⬇ Unduh Naskah Berkas</button
+              ><button class="btn g" onclick="closeM()">Kembali ke Galeri</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MODAL PANDUAN ===== -->
+    <div class="mo" id="help">
+      <div class="mb" style="max-width: 440px; padding: 24px; background: var(--lo)">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px">
+          <h3 class="os" style="font-size: 20px">Panduan Eksibisi 8 Kepala Sekolah</h3>
+          <button onclick="help.classList.remove('s')">✕</button>
+        </div>
+        <div class="mu" style="display: grid; gap: 12px; font-size: 12px; line-height: 18px">
+          <p><b class="ac">Navigasi Slide:</b> Klik panah kiri/kanan atau tombol keyboard [←] / [→].</p>
+          <p>
+            <b class="ac">Lini Masa Bawah:</b> Klik salah satu dari 8 checkpoint untuk langsung menuju era
+            kepemimpinan.
+          </p>
+          <p>
+            <b class="ac">Mode Inspeksi 4K:</b> Klik pigura emas atau "Periksa Detail" untuk membuka berkas
+            arsip.
+          </p>
+        </div>
+        <button class="btn" style="width: 100%; margin-top: 24px" onclick="help.classList.remove('s')">
+          Lanjutkan Jelajah Galeri
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+      // ====== DATA: ganti nama, foto (image), dan teks di sini ======
+      // ===== DATA 8 KEPALA SEKOLAH: ganti teks & foto di sini =====
+// Opsional per kepala sekolah: audio: "audio/ks1.mp3" (pakai rekaman sendiri) dan teksAudio: "..." (teks khusus yang dibacakan)
+      // foto: isi URL gambar, mis. "foto/ks1.jpg". Kosongkan untuk memakai image holder.
+      const DATA = [
+        {
+          nama: "Zainul Aminyn, B.A.",
+          periode: "1991–1992",
+          judulEra: "MERINTIS LANGKAH PENDIDIKAN",
+          ringkasan:
+            "Tahun 1991 menjadi awal perjalanan SMA Negeri 1 Turen dengan Zainul Aminyn, B.A., sebagai pengelola pertama sekolah.",
+          dimensi: "142 × 108 CM",
+          narasi1:
+            "Zainul Aminyn, B.A., mulai bertugas sebagai pengelola SMA Negeri 1 Turen pada 1 Juli 1991 hingga 31 Maret 1992, berdasarkan surat keputusan Kanwil Depdikbud Jawa Timur. Saat itu, beliau juga menjabat sebagai Kepala SMA Negeri 1 Dampit.",
+          narasi2:
+            "Kegiatan belajar mengajar dimulai dengan pagu 120 siswa dan tenaga pengajar pinjaman dari SMA Negeri 1 Dampit. Untuk mendukung perkembangan sekolah, ruang belajar ditambah dan dibangun dua ruang kelas melalui bantuan Proyek Dikdasmen Jawa Timur.",
+          milestone: [
+            "1 Juli 1991 — Mulai mengelola SMA Negeri 1 Turen",
+            "1991 — Kegiatan belajar mengajar dimulai dengan pagu 120 siswa",
+            "1991–1992 — Penambahan ruang belajar dan bantuan dua ruang kelas"
+          ],
+          kurator: "TIM KURATOR MUSEUM VIRTUAL SMA NEGERI 1 TUREN",
+          kodeArsip: "ARSIP-KS1-1991-1992",
+          labelEra: "Era Perintisan",
+          foto: "/images/ks1.jpg",
+          audio: "",
+          teksAudio: "",
+        },
+        {
+          nama: "Drs. Hironimus Supardi",
+          periode: "1992–1993",
+          judulEra: "MENATA LINGKUNGAN DAN FONDASI SEKOLAH",
+          ringkasan:
+            "Pada 1992, Drs. Hironimus Supardi dipercaya sebagai PLH Kepala SMA Negeri 1 Turen untuk melanjutkan kegiatan pendidikan.",
+          dimensi: "142 × 108 CM",
+          narasi1:
+            "Drs. Hironimus Supardi menjabat sebagai PLH Kepala SMA Negeri 1 Turen mulai 1 April 1992 hingga 31 Januari 1993 berdasarkan penugasan Kanwil Depdikbud Jawa Timur. Sebelumnya, beliau merupakan guru di SMA Negeri 1 Batu.",
+          narasi2:
+            "Pada masa kepemimpinannya, kegiatan belajar mengajar berjalan normal melalui kerja sama seluruh tenaga pendidik. Penataan master plan, penghijauan, dan kebersihan lingkungan sekolah mulai diperhatikan sebelum beliau mendapat tugas penataran dari Kanwil Depdikbud Jawa Timur.",
+          milestone: [
+            "1 April 1992 — Mulai menjabat sebagai PLH kepala sekolah",
+            "1992 — Penataan master plan dan penghijauan sekolah",
+            "31 Januari 1993 — Mengakhiri masa tugas di SMA Negeri 1 Turen"
+          ],
+          kurator: "TIM KURATOR MUSEUM VIRTUAL SMA NEGERI 1 TUREN",
+          kodeArsip: "ARSIP-KS2-1992-1993",
+          labelEra: "Era Penataan",
+          foto: "/images/ks2.jpg",
+          audio: "",
+          teksAudio: "",
+        },
+        {
+          nama: "Sri Lono Widodo, B.A.",
+          periode: "1994–1996",
+          judulEra: "MEMBANGUN KEBERSAMAAN DAN IDENTITAS SEKOLAH",
+          ringkasan:
+            "Kepemimpinan Sri Lono Widodo, B.A., membawa perkembangan fasilitas, penataan tenaga pendidikan, dan penguatan kebersamaan warga sekolah.",
+          dimensi: "142 × 108 CM",
+          narasi1:
+            "Sri Lono Widodo, B.A., mulai menjabat pada 1 Maret 1994 setelah bertugas sebagai guru Bahasa Inggris di SMA Negeri 2 Malang. Pada masa kepemimpinannya, penataan tenaga pendidikan dan hubungan dengan pengurus BP3 semakin baik.",
+          narasi2:
+            "Pengembangan sekolah meliputi pembangunan gapura, pintu gerbang, lapangan basket, serta penambahan ruang kelas. Beliau juga menciptakan Himne SMA Negeri 1 Turen, Mitreka Eka Praya, dan mengadakan pertemuan keluarga besar sekolah setiap tiga bulan.",
+          milestone: [
+            "1994 — Memulai kepemimpinan di SMA Negeri 1 Turen",
+            "1994–1996 — Pengembangan fasilitas dan ruang kelas",
+            "1994–1996 — Penciptaan Himne Mitreka Eka Praya"
+          ],
+          kurator: "TIM KURATOR MUSEUM VIRTUAL SMA NEGERI 1 TUREN",
+          kodeArsip: "ARSIP-KS4-1994-1997",
+          labelEra: "Era Kebersamaan",
+          foto: "/images/ks4.jpg",
+          audio: "",
+          teksAudio: "",
+        },
+        {
+          nama: "Dra. Sri Mulyani",
+          periode: "1997–1998",
+          judulEra: "MENGUATKAN DISIPLIN DAN KEMAJUAN BELAJAR",
+          ringkasan:
+            "Kepemimpinan Dra. Sri Mulyani melanjutkan program sekolah dengan menekankan efisiensi, disiplin, dan peningkatan prestasi belajar siswa.",
+          dimensi: "142 × 108 CM",
+          narasi1:
+            "Dra. Sri Mulyani menjabat sebagai Kepala SMA Negeri 1 Turen mulai 1 Maret 1997 hingga 30 September 1998, setelah bertugas sebagai guru di SMA Negeri 1 Kepanjen. Beliau dikenal energik dan berdedikasi dalam melanjutkan program pengembangan sekolah.",
+          narasi2:
+            "Pada masa kepemimpinannya, kegiatan belajar mengajar berjalan baik berkat kebersamaan dan disiplin warga sekolah. Beliau juga melanjutkan upaya penambahan ruang kelas untuk mendukung kenyamanan belajar dan kemajuan siswa.",
+          milestone: [
+            "1 Maret 1997 — Memulai kepemimpinan di SMA Negeri 1 Turen",
+            "1997–1998 — Melanjutkan program pengembangan sekolah",
+            "1997–1998 — Penguatan disiplin dan peningkatan kualitas belajar"
+          ],
+          kurator: "TIM KURATOR MUSEUM VIRTUAL SMA NEGERI 1 TUREN",
+          kodeArsip: "ARSIP-KS5-1997-1998",
+          labelEra: "Era Disiplin dan Efisiensi",
+          foto: "/images/ks5.jpg",
+          audio: "",
+          teksAudio: "",
+        },
+        {
+          nama: "Drs. H. Fatheh, M.Pd.",
+          periode: "1998–2001",
+          judulEra: "MEMBANGUN KEMAJUAN DAN TEKNOLOGI PENDIDIKAN",
+          ringkasan:
+            "Kepemimpinan Drs. H. Fatheh, M.Pd., mendorong pembenahan tata kelola sekolah dan pengembangan fasilitas berbasis teknologi.",
+          dimensi: "142 × 108 CM",
+          narasi1:
+            "Drs. H. Fatheh, M.Pd., menjabat sebagai Kepala SMA Negeri 1 Turen mulai 1 Oktober 1998 hingga 30 September 2001 setelah meraih prestasi di bidang pendidikan di SMA Negeri 6 Malang. Beliau berupaya meningkatkan mutu pengajaran, administrasi, dan pelayanan sekolah.",
+          narasi2:
+            "Meski menghadapi keterbatasan tenaga dan fasilitas, beliau bersama BP3 terus mendorong kemajuan sekolah. Pada tahun ajaran 2000–2001, upaya tersebut menghasilkan laboratorium komputer yang dilengkapi jaringan internet dan aplikasi multimedia.",
+          milestone: [
+            "1 Oktober 1998 — Memulai kepemimpinan di SMA Negeri 1 Turen",
+            "1998–2001 — Pembenahan pengajaran dan administrasi sekolah",
+            "2000–2001 — Terwujudnya laboratorium komputer dan jaringan internet"
+          ],
+          kurator: "TIM KURATOR MUSEUM VIRTUAL SMA NEGERI 1 TUREN",
+          kodeArsip: "ARSIP-KS6-1998-2001",
+          labelEra: "Era Modernisasi",
+          foto: "/images/ks6.jpg",
+          audio: "",
+          teksAudio: "",
+        },
+        {
+          nama: "Drs. Maskuri",
+          periode: "2001–2008",
+          judulEra: "ERA PENGEMBANGAN DAN KEMANDIRIAN SEKOLAH",
+          ringkasan:
+            "Kepemimpinan Drs. Maskuri membawa kemajuan fasilitas, kemitraan pendidikan, dan pengembangan keterampilan untuk mempersiapkan lulusan menghadapi dunia kerja.",
+          dimensi: "142 × 108 CM",
+          narasi1:
+            "Drs. Maskuri menjabat sebagai Kepala SMA Negeri 1 Turen mulai 1 Oktober 2001 hingga 30 September 2008. Beliau mengembangkan kemitraan dengan perguruan tinggi, program keterampilan, serta pembelajaran kontekstual yang mendorong kemandirian siswa.",
+          narasi2:
+            "Pada masa kepemimpinannya, sekolah membangun lima ruang kelas, laboratorium bahasa, dan laboratorium komputer. Beliau juga mendapat tugas merintis SMA Negeri 1 Sumbermanjing Wetan serta menjadi PLT Kepala SMA Negeri 1 Dampit.",
+          milestone: [
+            "2001 — Memulai kepemimpinan di SMA Negeri 1 Turen",
+            "2004–2005 — Merintis SMA Negeri 1 Sumbermanjing Wetan",
+            "2001–2008 — Pengembangan fasilitas dan program keterampilan siswa"
+          ],
+          kurator: "TIM KURATOR MUSEUM VIRTUAL SMA NEGERI 1 TUREN",
+          kodeArsip: "ARSIP-KS7-2001-2008",
+          labelEra: "Era Pengembangan",
+          foto: "/images/ks7.jpg",
+          audio: "",
+          teksAudio: "",
+        },
+        {
+          nama: "Drs. H. Fatheh, M.Pd.",
+          periode: "2008–2013",
+          judulEra: "ERA PEMBENAHAN SARANA DAN PRASARANA",
+          ringkasan:
+            "Kembalinya Drs. H. Fatheh, M.Pd., membawa semangat baru dalam pembenahan fasilitas untuk mendukung kemajuan SMA Negeri 1 Turen.",
+          dimensi: "142 × 108 CM",
+          narasi1:
+            "Drs. H. Fatheh, M.Pd., kembali menjabat sebagai Kepala SMA Negeri 1 Turen mulai 1 Oktober 2008 hingga 30 September 2013. Dengan semangat dan dedikasi tinggi, beliau melanjutkan pengembangan sekolah setelah beberapa tahun bertugas di tempat lain.",
+          narasi2:
+            "Pada masa kepemimpinannya, peningkatan sarana dan prasarana menjadi prioritas utama. Perbaikan paving dan pagar sekolah mulai direalisasikan untuk menciptakan lingkungan pendidikan yang lebih baik dan mendukung kegiatan belajar mengajar.",
+          milestone: [
+            "1 Oktober 2008 — Kembali memimpin SMA Negeri 1 Turen",
+            "2008–2013 — Pembenahan sarana dan prasarana sekolah",
+            "2008–2013 — Pengerjaan paving dan penyempurnaan pagar sekolah"
+          ],
+          kurator: "TIM KURATOR MUSEUM VIRTUAL SMA NEGERI 1 TUREN",
+          kodeArsip: "ARSIP-KS8-2008-2013",
+          labelEra: "Era Pembenahan",
+          foto: "/images/ks8.jpg",
+          audio: "",
+          teksAudio: "",
+        },
+        {
+          nama: "Drs. Ibnu Harsoyo",
+          periode: "2013–2021",
+          judulEra: "MENGUKIR PRESTASI DAN INOVASI",
+          ringkasan:
+            "Kepemimpinan Drs. Ibnu Harsoyo membawa kemajuan dalam fasilitas sekolah, prestasi siswa, dan inovasi pembelajaran.",
+          dimensi: "142 × 108 CM",
+          narasi1:
+            "Drs. Ibnu Harsoyo menjabat pada 1 Oktober 2013 hingga 27 Juli 2021. Beliau dikenal ramah serta memperhatikan keindahan lingkungan sekolah melalui pembangunan aula dan kantin.",
+          narasi2:
+            "Prestasi olahraga dan seni berkembang hingga tingkat nasional. Beliau juga merintis pembelajaran Sistem Kredit Semester (SKS) yang menarik perhatian sekolah-sekolah lain.",
+          milestone: [
+            "1 Oktober 2013 — Mulai menjabat sebagai kepala sekolah",
+            "2013–2021 — Pembangunan aula dan kantin sekolah",
+            "2013–2021 — Pengembangan prestasi siswa dan rintisan pembelajaran SKS"
+          ],
+          kurator: "TIM KURATOR MUSEUM VIRTUAL SMA NEGERI 1 TUREN",
+          kodeArsip: "ARSIP-KS9-2013-2021",
+          labelEra: "Era Prestasi dan Inovasi",
+          foto: "images/ks9.jpg",
+          audio: "",
+          teksAudio: "",
+        },
+        {
+          nama: "Eny Retno Diwati, M.Pd.",
+          periode: "2021–Sekarang",
+          judulEra: "MENATA ASET DAN MENGEMBANGKAN POTENSI",
+          ringkasan:
+            "Kepemimpinan Eny Retno Diwati, M.Pd., menghadirkan pembaruan dalam tata kelola sekolah, pengembangan fasilitas, dan budaya literasi.",
+          dimensi: "142 × 108 CM",
+          narasi1:
+            "Mulai menjabat pada 1 September 2021, Eny Retno Diwati, M.Pd., menjadi kepala sekolah perempuan kedua di SMA Negeri 1 Turen. Beliau mengutamakan penataan administrasi, keuangan, aset, serta penguatan berbagai program sekolah.",
+          narasi2:
+            "Pada masa kepemimpinannya, dikembangkan program Jumat Berkah, Bank Mini, Double Track, dan pembangunan Gedung Multimedia. Budaya literasi juga semakin maju melalui akreditasi perpustakaan bernilai A, penerbitan karya guru dan siswa, serta pelaksanaan UKBI.",
+          milestone: [
+            "1 September 2021 — Mulai menjabat sebagai kepala sekolah",
+            "2021–sekarang — Pengembangan program sekolah dan fasilitas pendidikan",
+            "2021–sekarang — Penguatan literasi dan pengembangan potensi warga sekolah"
+          ],
+          kurator: "TIM KURATOR MUSEUM VIRTUAL SMA NEGERI 1 TUREN",
+          kodeArsip: "ARSIP-KS10-2021-SEKARANG",
+          labelEra: "Era Pembaruan dan Literasi",
+          foto: "/images/ks10.jpg",
+          audio: "",
+          teksAudio: "",
+        },
+        {
+          nama: "Agus Harianto, M.Pd.",
+          periode: "2025–Sekarang",
+          judulEra: "ERA TRANSFORMASI DAN INOVASI PENDIDIKAN",
+          ringkasan:
+            "Kepemimpinan yang mengedepankan literasi, inovasi, dan transformasi pendidikan melalui pengembangan karya, kolaborasi, serta budaya belajar berkelanjutan.",
+          dimensi: "140 × 105 CM",
+          narasi1:
+            "Berpengalaman lebih dari 27 tahun di dunia pendidikan, beliau merupakan pendidik, penulis, dan pengembang pendidikan. Sebelumnya, beliau menjabat Kepala SMAN 1 Sumbermanjing sebelum memimpin SMAN 1 Turen pada 2025.",
+          narasi2:
+            "Aktif berkarya melalui buku ber-ISBN, publikasi ilmiah, dan pengembangan kurikulum. Prestasinya meliputi Juara 1 Best Practice Kepala Sekolah Gempita Award 2024 serta Inovator Terbaik EJIES 2026 Jawa Timur.",
+          milestone: [
+            "Juara 1 Best Practice Kepala Sekolah Gempita Award 2024",
+            "Inovator Terbaik EJIES Jawa Timur 2026",
+            "19 Karya Buku dan Book Chapter Ber-ISBN",
+          ],
+          kurator: "TIM KURATOR SEKOLAH",
+          kodeArsip: "ARSIP-KS-AH-2025",
+          labelEra: "Transformasi Pendidikan",
+          foto: "/images/ks11.jpg",
+          audio: "",
+          teksAudio: "",
+        },
+      ];
+      // Konversi internal (jangan diubah)
+      const D = DATA.map((o) => [
+        o.nama,
+        o.periode,
+        o.judulEra,
+        o.ringkasan,
+        o.dimensi,
+        o.narasi1,
+        o.narasi2,
+        o.milestone,
+        o.kurator,
+        o.kodeArsip,
+        "",
+        o.labelEra,
+        o.foto,
+        o.audio, // 13: file audio opsional (mp3)
+        o.teksAudio, // 14: teks narasi khusus (opsional)
+      ]);
+      // Placeholder foto (SVG). Ganti dengan URL foto asli: D[i].foto = "foto/ks1.jpg"
+      const ph = (i) =>
+        "data:image/svg+xml;utf8," +
+        encodeURIComponent(
+          `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 350 470'><rect width='350' height='470' fill='#0f2a47'/><rect x='14' y='14' width='322' height='442' fill='none' stroke='#4f9be8' stroke-width='2' stroke-dasharray='10 8'/><circle cx='175' cy='185' r='58' fill='#2a4a6e'/><path d='M60 400c0-90 50-130 115-130s115 40 115 130z' fill='#2a4a6e'/><text x='175' y='425' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='19' fill='#8ec5ff'>FOTO KEPALA SEKOLAH KE-${i + 1}</text><text x='175' y='446' text-anchor='middle' font-family='Arial' font-size='13' fill='#a9bbd4'>Image holder • 350 × 470 px</text></svg>`,
+        );
+      D.forEach((d, i) => (d.foto = d[12] || ph(i)));
+      const $ = (id) => document.getElementById(id),
+        N = D.length;
+      let cur = 0,
+        tour = null,
+        busy = false;
+      const sb = $("sb"),
+        lbs = $("lbs");
+      D.forEach((d, i) => {
+        const b = document.createElement("button");
+        b.title = d[0];
+        b.setAttribute("aria-label", `Tampilkan ${d[0]}`);
+        b.onclick = () => go(i);
+        sb.appendChild(b);
+        const l = document.createElement("button");
+        l.textContent = String(i + 1).padStart(2, "0");
+        l.title = d[0];
+        l.setAttribute("aria-label", `Tampilkan ${d[0]}`);
+        l.onclick = () => go(i);
+        lbs.appendChild(l);
+      });
+      function paint(i) {
+        const d = D[i];
+        $("cnt").textContent = `SLIDE ${i + 1} DARI ${N} • ${d[11].toUpperCase()}`;
+        $("pCat").textContent = `KAT. #0${i + 1}-KS`;
+        $("pName").textContent = d[0];
+        $("pPer").textContent = `Periode: ${d[1]} • Kepala Sekolah Ke-${i + 1}`;
+        $("pBrief").textContent = d[3];
+        $("pDim").textContent = "DIMENSI: " + d[4];
+        $("img").src = d.foto;
+        $("tTerm").textContent = d[1];
+        $("eyb").textContent = `DEDIKASI ARSIP KEPEMIMPINAN KE-${i + 1} (${d[1].toUpperCase()})`;
+        $("hl").textContent = d[2];
+        $("n1").textContent = d[5];
+        $("n2").textContent = d[6];
+        $("cur").textContent = "KURATOR: " + d[8];
+        $("reg").textContent = "REGISTRASI: " + d[9];
+        $("ms").innerHTML = d[7].map((m) => `<span>${m}</span>`).join("");
+        $("gPi").src = D[(i + N - 1) % N].foto;
+        $("gNi").src = D[(i + 1) % N].foto;
+        $("stage").style.backgroundPosition = (i / (N - 1)) * 100 + "% 0";
+        $("hs").textContent = `${i + 1} / ${N} Kepala Sekolah`;
+        $("sf").style.width = ((i + 1) / N) * 100 + "%";
+        [...sb.querySelectorAll("button")].forEach(
+          (b, k) => (b.className = k == i ? "on" : k < i ? "pa" : ""),
+        );
+        [...lbs.children].forEach((b, k) => (b.className = k == i ? "on" : ""));
+      }
+      function go(i) {
+        i = (i + N) % N;
+        if (i === cur || busy) return;
+        busy = true;
+        const v = $("vp");
+        const dir = i === (cur + 1) % N ? 1 : i === (cur + N - 1) % N ? -1 : i > cur ? 1 : -1;
+        v.style.setProperty("--dx", -dir * 90 + "px");
+        v.classList.add("h");
+        setTimeout(() => {
+          cur = i;
+          paint(i);
+          v.dataset.l = i % 3;
+          v.classList.add("nt");
+          v.style.setProperty("--dx", dir * 90 + "px");
+          v.offsetWidth;
+          v.classList.remove("nt", "h");
+          setTimeout(() => (busy = false), 500);
+          afterSlide(i);
+        }, 380);
+      }
+      L.onclick = () => go(cur - 1);
+      R.onclick = () => go(cur + 1);
+      addEventListener("keydown", (e) => {
+        const k = e.key;
+        if (k == "ArrowRight" || k == "d" || k == "D") go(cur + 1);
+        else if (k == "ArrowLeft" || k == "a" || k == "A") go(cur - 1);
+        else if (k == "Escape") {
+          closeM();
+          help.classList.remove("s");
+        }
+      });
+      // ===== AUDIO NARASI (suara otomatis bahasa Indonesia, Web Speech API) =====
+      const TTS = window.speechSynthesis;
+      let guideOn = false,
+        tourOn = false,
+        tourT = null,
+        token = 0,
+        voice = null,
+        audioEl = null,
+        speaking = false;
+      function pickVoice() {
+        const v = TTS ? TTS.getVoices() : [];
+        voice =
+          v.find((x) => x.lang.replace("_", "-").toLowerCase() === "id-id") ||
+          v.find((x) => x.lang.toLowerCase().startsWith("id")) ||
+          null;
+      }
+      if (TTS) {
+        pickVoice();
+        TTS.onvoiceschanged = pickVoice;
+      }
+      // Rapikan teks agar dibaca natural (gelar, tanda pisah, rentang tahun)
+      function clean(t) {
+        return t
+          .replace(/(\d{4})\s*[–-]\s*(\d{4})/g, "$1 sampai $2")
+          .replace(/(\d{4})\s*[–-]\s*Sekarang/gi, "$1 sampai sekarang")
+          .replace(/\bDrs\./g, "Doktorandus")
+          .replace(/\bDra\./g, "Doktoranda")
+          .replace(/\bHj\./g, "Hajjah")
+          .replace(/\bH\. /g, "Haji ")
+          .replace(/M\.Pd\./g, "Magister Pendidikan")
+          .replace(/M\.Si\./g, "Magister Sains")
+          .replace(/M\.M\./g, "Magister Manajemen")
+          .replace(/, BA\b/g, ", Sarjana Muda")
+          .replace(/[—–]/g, ", ");
+      }
+      function narasiText(i) {
+        const d = D[i];
+        return d[14] || [`${d[0]}. Periode ${d[1]}.`, d[2].toLowerCase() + ".", d[3], d[5], d[6]].join(" ");
+      }
+      function setPlaying(on) {
+        speaking = on;
+        duck(on); // kecilkan suara ambien saat narasi dibacakan
+        $("mPlay").textContent = on ? "⏸" : "▶";
+        $("wv").classList.toggle("play", on);
+        $("mTime").textContent = on ? "Sedang dibacakan…" : "Siap diputar";
+      }
+      function stopSpeech() {
+        token++;
+        if (TTS) TTS.cancel();
+        if (audioEl) {
+          audioEl.pause();
+          audioEl = null;
+        }
+        setPlaying(false);
+      }
+      function speak(i, onEnd) {
+        stopSpeech();
+        const my = token,
+          d = D[i];
+        const done = () => {
+          if (my !== token) return;
+          setPlaying(false);
+          if (onEnd) onEnd();
+        };
+        if (d[13]) {
+          audioEl = new Audio(d[13]);
+          audioEl.onended = done;
+          audioEl.onerror = done;
+          audioEl.play().then(() => setPlaying(true)).catch(done);
+          return;
+        }
+        if (!TTS) {
+          $("mTime").textContent = "Browser tidak mendukung suara";
+          return done();
+        }
+        const parts = clean(narasiText(i)).match(/[^.!?]+[.!?]*/g) || [];
+        let k = 0;
+        setPlaying(true);
+        const next = () => {
+          if (my !== token) return;
+          if (k >= parts.length) return done();
+          const u = new SpeechSynthesisUtterance(parts[k++].trim());
+          u.lang = "id-ID";
+          if (voice) u.voice = voice;
+          u.rate = 0.95;
+          u.onend = next;
+          u.onerror = done;
+          TTS.speak(u);
+        };
+        next();
+      }
+      function toggleAudio() {
+        if (speaking) stopSpeech();
+        else speak(cur);
+      }
+      $("bAud").onclick = function () {
+        guideOn = !guideOn;
+        this.classList.toggle("on", guideOn);
+        if (guideOn) speak(cur, () => scheduleTour(1500));
+        else stopSpeech();
+      };
+      // ===== JALAN OTOMATIS (berputar 1 → 8 → 1) =====
+      function scheduleTour(ms) {
+        clearTimeout(tourT);
+        if (tourOn) tourT = setTimeout(() => go(cur + 1), ms);
+      }
+      // Dipanggil setiap slide selesai berganti
+      function afterSlide(i) {
+        if (guideOn) speak(i, () => scheduleTour(1500));
+        else {
+          if (!modalOpen()) stopSpeech();
+          scheduleTour(5000);
+        }
+      }
+      function modalOpen() {
+        return $("mod").classList.contains("s");
+      }
+      $("bAuto").onclick = function () {
+        tourOn = !tourOn;
+        this.classList.toggle("on", tourOn);
+        this.firstChild.textContent = tourOn ? "⏸ " : "▶ ";
+        this.querySelector("span").textContent = tourOn ? "Jeda" : "Jalan Otomatis";
+        if (!tourOn) return clearTimeout(tourT);
+        if (guideOn) speak(cur, () => scheduleTour(1500));
+        else scheduleTour(5000);
+      };
+      // ===== AUDIO AMBIEN RUANGAN (loop, volume kecil) =====
+      // Ganti dengan file audio asli, mis. "audio/ambien.mp3".
+      // Jika file tidak ditemukan, otomatis memakai suara ambien buatan (placeholder).
+      const AMBIEN_SRC = "audio/ambien.mp3";
+      const AMBIEN_VOL = 0.12; // 0 (senyap) – 1 (penuh). Disarankan 0.08–0.2
+      let ambOn = false,
+        duckOn = false,
+        ambEl = null,
+        ambBroken = false,
+        actx = null,
+        amaster = null;
+      function applyAmbVol() {
+        const v = ambOn ? AMBIEN_VOL * (duckOn ? 0.35 : 1) : 0;
+        if (ambEl) ambEl.volume = Math.min(1, v);
+        if (amaster) amaster.gain.setTargetAtTime(v, actx.currentTime, 0.4);
+      }
+      function duck(on) {
+        duckOn = on;
+        applyAmbVol();
+      }
+      function startSynth() {
+        if (!actx) {
+          actx = new (window.AudioContext || window.webkitAudioContext)();
+          amaster = actx.createGain();
+          amaster.gain.value = 0;
+          amaster.connect(actx.destination);
+          // desir ruangan lembut (brown noise yang disaring)
+          const len = actx.sampleRate * 4,
+            buf = actx.createBuffer(1, len, actx.sampleRate),
+            ch = buf.getChannelData(0);
+          let last = 0;
+          for (let i = 0; i < len; i++) {
+            last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02;
+            ch[i] = last * 3.5;
+          }
+          const src = actx.createBufferSource();
+          src.buffer = buf;
+          src.loop = true;
+          const lp = actx.createBiquadFilter();
+          lp.type = "lowpass";
+          lp.frequency.value = 450;
+          src.connect(lp);
+          lp.connect(amaster);
+          src.start();
+          // dengung rendah yang bergelombang pelan
+          [110, 164.81, 220.5].forEach((f, k) => {
+            const o = actx.createOscillator(),
+              g = actx.createGain(),
+              lfo = actx.createOscillator(),
+              lg = actx.createGain();
+            o.frequency.value = f;
+            g.gain.value = 0.05;
+            lfo.frequency.value = 0.05 + k * 0.03;
+            lg.gain.value = 0.04;
+            lfo.connect(lg);
+            lg.connect(g.gain);
+            o.connect(g);
+            g.connect(amaster);
+            o.start();
+            lfo.start();
+          });
+        }
+        actx.resume();
+        applyAmbVol();
+      }
+      function startAmbien() {
+        if (AMBIEN_SRC && !ambBroken) {
+          if (!ambEl) {
+            ambEl = new Audio(AMBIEN_SRC);
+            ambEl.loop = true;
+            ambEl.onerror = () => {
+              ambBroken = true;
+              ambEl = null;
+              if (ambOn) startSynth();
+            };
+          }
+          applyAmbVol();
+          ambEl.play().catch(() => {
+            if (ambBroken) return;
+            ambBroken = true;
+            ambEl = null;
+            if (ambOn) startSynth();
+          });
+          return;
+        }
+        startSynth();
+      }
+      function stopAmbien() {
+        applyAmbVol();
+        if (ambEl) ambEl.pause();
+        setTimeout(() => {
+          if (!ambOn && actx) actx.suspend();
+        }, 1200);
+      }
+      $("bAmb").onclick = function () {
+        ambOn = !ambOn;
+        this.classList.toggle("on", ambOn);
+        this.firstChild.textContent = ambOn ? "🔊 " : "🔇 ";
+        if (ambOn) startAmbien();
+        else stopAmbien();
+      };
+      let z = 1;
+      $("bZoom").onclick = () => {
+        z = z == 1 ? 1.06 : 1;
+        $("zs").textContent = z == 1 ? "Skala 100%" : "Skala 110%";
+        $("vp").style.transform = `scale(${z})`;
+      };
+      $("bHelp").onclick = () => help.classList.add("s");
+      $("wv").innerHTML = Array.from(
+        { length: 16 },
+        (_, i) => `<i style="height:${6 + ((i * 7) % 26)}px;animation-delay:${i * 0.07}s"></i>`,
+      ).join("");
+      function openM() {
+        const d = D[cur];
+        $("mAcc").textContent = `DOSSIER ARSIP KAT. #0${cur + 1}-KS`;
+        $("mTit").textContent = `${d[0]} (${d[1]})`;
+        $("mDesc").innerHTML = d[5] + "<br><br>" + d[6];
+        $("mPer").textContent = `Kepala Sekolah Ke-${cur + 1} • ${d[0]}`;
+        $("mPrd").textContent = d[1];
+        $("mImg").src = d.foto;
+        $("mod").classList.add("s");
+        document.body.style.overflow = "hidden";
+      }
+      function closeM() {
+        $("mod").classList.remove("s");
+        document.body.style.overflow = "";
+        if (!guideOn) stopSpeech();
+      }
+      $("mod").onclick = (e) => {
+        if (e.target.id == "mod") closeM();
+      };
+      $("help").onclick = (e) => {
+        if (e.target.id == "help") help.classList.remove("s");
+      };
+      // Kunci tinggi galeri = tinggi slide tertinggi, supaya lini masa bawah tidak bergeser
+      function fitStage() {
+        const st = $("stage"),
+          v = $("vp"),
+          cs = getComputedStyle(st);
+        let max = 0;
+        st.style.transition = "none";
+        for (let i = 0; i < N; i++) {
+          paint(i);
+          max = Math.max(max, v.offsetHeight);
+        }
+        paint(cur);
+        st.style.height = max + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + "px";
+        st.offsetWidth;
+        st.style.transition = "";
+      }
+      let rt;
+      addEventListener("resize", () => {
+        clearTimeout(rt);
+        rt = setTimeout(fitStage, 150);
+      });
+      paint(0);
+      $("vp").dataset.l = 0;
+      fitStage();
+      if (document.fonts) document.fonts.ready.then(fitStage);
+    </script>
+  </body>
+</html>
