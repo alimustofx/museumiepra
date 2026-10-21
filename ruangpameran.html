@@ -1,0 +1,1013 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Ruang Pameran • Museum Virtual SMANERE</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0a1626;
+        --pn: #0e2038;
+        --pn2: #14304f;
+        --lo: #06101d;
+        --ac: #8ec5ff;
+        --ac2: #4f9be8;
+        --tx: #e6eefa;
+        --mu: #a9bbd4;
+        --ol: #6b829f;
+        --pad-t: env(safe-area-inset-top, 0px);
+        --pad-b: env(safe-area-inset-bottom, 0px);
+      }
+      html {
+        scrollbar-gutter: stable; /* lebar halaman sama dengan index.html, menu tidak bergeser */
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--tx);
+        font:
+          14px/22px Inter,
+          sans-serif;
+        overflow-x: hidden;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        border: 0;
+        background: none;
+        cursor: pointer;
+      }
+      .hd,
+      .ft {
+        position: fixed;
+        left: 0;
+        width: 100%;
+        z-index: 50;
+        background: rgba(6, 16, 29, 0.93);
+        backdrop-filter: blur(10px);
+      }
+      .hd {
+        top: 0;
+        padding-top: var(--pad-t);
+        box-shadow: 0 1px 8px #000a;
+      }
+      .ft {
+        bottom: 0;
+        padding-bottom: var(--pad-b);
+        box-shadow: 0 -1px 12px #000b;
+      }
+      .row {
+        height: 80px;
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .lb {
+        font: 600 10px/14px Inter;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .os {
+        font-family: Oswald, sans-serif;
+        text-transform: uppercase;
+      }
+      .ac {
+        color: var(--ac);
+      }
+      .mu {
+        color: var(--mu);
+      }
+      .ol {
+        color: var(--ol);
+      }
+      .logo {
+        width: 40px;
+        height: 40px;
+        background: var(--ac2);
+        display: grid;
+        place-items: center;
+        font: 700 14px Oswald;
+        letter-spacing: 0.1em;
+        color: #fff;
+      }
+      .brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .brand b {
+        font: 500 18px/22px Oswald;
+        letter-spacing: 0.06em;
+        display: block;
+      }
+      .nav {
+        display: flex;
+        gap: 4px;
+      }
+      .nav a {
+        padding: 8px 14px;
+        font: 500 13px Oswald;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--mu);
+        text-decoration: none;
+      }
+      .nav a.on,
+      .nav a:hover {
+        background: var(--pn2);
+        color: var(--ac);
+      }
+      .chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        background: var(--pn);
+        text-decoration: none;
+        color: var(--tx);
+      }
+      .chip:hover {
+        background: var(--pn2);
+        color: var(--ac);
+      }
+      .chip.on {
+        color: var(--ac);
+        background: var(--pn2);
+      }
+      .av {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--ac2);
+        display: grid;
+        place-items: center;
+      }
+      main {
+        padding: 80px 0;
+      }
+      #stage {
+        position: relative;
+        overflow: hidden;
+        height: calc(100dvh - 160px);
+        min-height: 540px;
+        background: linear-gradient(90deg, #071221, #123a63 45%, #091a2f);
+      }
+      .rail {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 12px;
+        background: var(--lo);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 30;
+      }
+      .rail i {
+        width: 32px;
+        height: 8px;
+        background: var(--pn2);
+      }
+      .lamp {
+        position: absolute;
+        top: 12px;
+        width: 16px;
+        height: 24px;
+        background: var(--pn2);
+        border-radius: 0 0 4px 4px;
+        z-index: 30;
+      }
+      .cone {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        pointer-events: none;
+        background: radial-gradient(
+          ellipse at 50% 0,
+          rgba(210, 232, 255, 0.2),
+          rgba(60, 130, 210, 0.1) 40%,
+          transparent 75%
+        );
+      }
+      .in {
+        position: relative;
+        z-index: 10;
+        height: 100%;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 34px 32px 26px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 24px;
+      }
+      .plq {
+        background: rgba(6, 16, 29, 0.88);
+        padding: 12px 18px;
+        border-left: 2px solid var(--ac);
+        box-shadow: 0 12px 30px #000a;
+        min-width: 0;
+        flex: 1;
+        max-width: 560px;
+      }
+      .plq h2 {
+        font: 700 28px/32px Oswald;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: #fff;
+        margin: 2px 0 4px;
+      }
+      .plq p {
+        font-size: 12px;
+        line-height: 17px;
+        color: var(--mu);
+      }
+      .fade {
+        transition:
+          opacity 0.3s,
+          transform 0.3s;
+      }
+      .fade.out {
+        opacity: 0;
+        transform: scale(0.985);
+      }
+      .tabs {
+        display: grid;
+        grid-template-columns: repeat(4, auto);
+        gap: 8px;
+      }
+      .tab {
+        text-align: left;
+        padding: 8px 14px;
+        background: rgba(6, 16, 29, 0.85);
+        border-top: 2px solid transparent;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0 10px;
+        align-items: center;
+        transition: 0.2s;
+      }
+      .tab i {
+        grid-row: span 2;
+        width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+        background: var(--pn2);
+        font-style: normal;
+        font-size: 16px;
+      }
+      .tab b {
+        font: 500 13px/16px Oswald;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .tab span {
+        font: 600 9px/12px Inter;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ol);
+      }
+      .tab:hover {
+        background: var(--pn2);
+      }
+      .tab.on {
+        background: var(--pn2);
+        border-color: var(--ac);
+      }
+      .tab.on b {
+        color: var(--ac);
+      }
+      .wallbox {
+        flex: 1;
+        min-height: 0;
+      }
+      .wall {
+        height: 100%;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: repeat(6, 1fr);
+        gap: 14px;
+      }
+      .fm {
+        position: relative;
+        min-height: 0;
+        cursor: pointer;
+        animation: up 0.7s both;
+        animation-delay: calc(var(--i) * 90ms);
+        transition: transform 0.3s;
+      }
+      .fm:hover {
+        transform: translateY(-3px) scale(1.012);
+        z-index: 5;
+      }
+      @keyframes up {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+      }
+      .bx {
+        position: absolute;
+        inset: 0;
+        padding: var(--b);
+        box-shadow: 0 14px 32px #000b;
+      }
+      .mt {
+        height: 100%;
+        padding: var(--m);
+      }
+      .mt img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .g .bx {
+        --b: 8px;
+        background: linear-gradient(135deg, #d4af37, #997a15, #f3e5ab);
+        outline: 3px solid #543d0b;
+      }
+      .g .mt {
+        --m: 4px;
+        background: #120808;
+      }
+      .k .bx {
+        --b: 10px;
+        background: linear-gradient(135deg, #4a2f1d, #1c120b, #5a3a24);
+      }
+      .k .mt {
+        --m: 10px;
+        background: #e9eef7;
+      }
+      .p .bx {
+        --b: 4px;
+        background: linear-gradient(135deg, #e6eefa, #8fa3bd);
+      }
+      .p .mt {
+        --m: 8px;
+        background: #fff;
+      }
+      .no {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        z-index: 2;
+        background: rgba(6, 16, 29, 0.85);
+        padding: 1px 8px;
+        color: var(--ac);
+      }
+      .cp {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        padding: 26px 12px 10px;
+        background: linear-gradient(transparent, rgba(6, 16, 29, 0.95));
+        opacity: 0;
+        transition: 0.3s;
+      }
+      .fm:hover .cp {
+        opacity: 1;
+      }
+      .cp b {
+        font: 500 14px/17px Oswald;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        display: block;
+      }
+      .ctrl {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+      .ctrl > button {
+        width: 30px;
+        height: 30px;
+        background: var(--pn);
+      }
+      .ctrl > button:hover {
+        color: var(--ac);
+      }
+      .ctrl > .chip {
+        width: auto;
+        height: 30px;
+        padding: 0 12px;
+      }
+      .dots {
+        display: flex;
+        gap: 9px;
+        align-items: center;
+      }
+      .dots button {
+        width: 10px;
+        height: 10px;
+        transform: rotate(45deg);
+        background: #355273;
+        transition: 0.2s;
+      }
+      .dots button.on {
+        background: var(--ac);
+        transform: rotate(45deg) scale(1.3);
+      }
+      .pbar {
+        width: 160px;
+        height: 3px;
+        background: var(--pn2);
+      }
+      .pbar i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: var(--ac2);
+      }
+      .btn {
+        padding: 12px 26px;
+        background: var(--ac);
+        color: #06101d;
+        font: 700 10px Inter;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .btn:hover {
+        background: #b9dbff;
+      }
+      .btn.g2 {
+        background: var(--pn);
+        color: var(--tx);
+        font-weight: 600;
+      }
+      .floor {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 14px;
+        z-index: 11;
+        background: linear-gradient(#0d1520, #04070c);
+        border-top: 3px solid #1d3550;
+      }
+      .ftl {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+      }
+      .ftl button {
+        width: 32px;
+        height: 32px;
+        background: var(--pn);
+      }
+      .ftl button:hover {
+        color: var(--ac);
+      }
+      .mo {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .mo.s {
+        display: flex;
+      }
+      .mb {
+        width: 100%;
+        max-width: 1024px;
+        max-height: 90vh;
+        overflow: auto;
+        background: var(--lo);
+        border-left: 4px solid var(--ac);
+        box-shadow: 0 25px 60px #000e;
+      }
+      .mh {
+        padding: 16px 24px;
+        background: #0b1a2e;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--pn2);
+      }
+      .mh h2 {
+        font: 500 28px/34px Oswald;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .x {
+        width: 40px;
+        height: 40px;
+        background: var(--pn);
+        font-size: 20px;
+      }
+      .x:hover {
+        background: var(--ac2);
+      }
+      .mc {
+        padding: 32px;
+        display: grid;
+        grid-template-columns: 7fr 5fr;
+        gap: 32px;
+      }
+      .mi {
+        height: 400px;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border: 1px solid rgba(107, 130, 159, 0.4);
+      }
+      .mi img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.3s;
+      }
+      .mi:hover img {
+        transform: scale(1.25);
+      }
+      .tbl {
+        background: #0b1a2e;
+        padding: 16px;
+        border-left: 2px solid rgba(142, 197, 255, 0.5);
+        font-size: 12px;
+        margin: 16px 0;
+      }
+      .tbl div {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 4px 0;
+        border-bottom: 1px solid var(--pn2);
+      }
+      .tbl div:last-child {
+        border: 0;
+      }
+      @media (max-width: 1100px) {
+        .top {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
+        }
+        .plq {
+          max-width: none;
+        }
+      }
+      @media (max-width: 1023px) {
+        .nav,
+        .hide-m {
+          display: none;
+        }
+        .row {
+          padding: 0 12px;
+        }
+        .in {
+          padding: 26px 12px 22px;
+        }
+        .plq p,
+        .tab span,
+        .pbar {
+          display: none;
+        }
+        .plq h2 {
+          font-size: 20px;
+          line-height: 24px;
+        }
+        .tabs {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .tab {
+          padding: 6px;
+        }
+        .tab b {
+          display: none;
+        }
+        .wall {
+          gap: 8px;
+        }
+        .mc {
+          grid-template-columns: 1fr;
+          padding: 16px;
+        }
+        .mi {
+          height: 300px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== HEADER (sama dengan halaman utama; ubah href "index.html" sesuai nama file galeri) ===== -->
+    <header class="hd">
+      <div class="row">
+        <div class="brand">
+          <img
+            src="/images/logo.png"
+            alt="Logo SMAN 1 Turen"
+            width="40"
+            height="40"
+            onerror="this.outerHTML='<div class=logo>SVM</div>'"
+          />
+          <div>
+            <b>MUSEUM VIRTUAL SMANERE</b
+            ><span class="lb ac">SMA Negeri 1 Turen – Arsip Sejarah &amp; Warisan</span>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="index.html">Pimpinan</a><a class="on" href="ruangpameran.html">Ruang Pameran</a
+          ><a href="#">Arsip Dokumen</a><a href="#">Lini Masa</a>
+        </nav>
+        <div style="display: flex; gap: 12px; align-items: center">
+          <button class="chip lb" id="bAud">🎧 <span class="hide-m">Panduan Audio</span></button
+          ><button class="chip lb" id="bMap">🗺 <span class="hide-m">Denah Ruangan</span></button>
+          <div class="av">👤</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== RUANG PAMERAN (satu layar penuh, tanpa scroll) ===== -->
+    <main>
+      <section id="stage">
+        <div class="rail"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="lamp" style="left: 240px"></div>
+        <div class="lamp" style="left: 50%"></div>
+        <div class="lamp" style="right: 240px"></div>
+        <div class="cone" style="left: calc(50% - 300px); width: 600px"></div>
+        <div class="cone" style="right: 8%; width: 560px"></div>
+        <div class="cone" style="left: 4%; width: 420px"></div>
+        <div class="in">
+          <div class="top">
+            <div class="plq fade" id="intro">
+              <span class="lb ac" id="rEy"></span>
+              <h2 id="rJudul"></h2>
+              <p id="rDesc"></p>
+            </div>
+            <div class="tabs" id="tabs"></div>
+          </div>
+          <div class="wallbox"><div class="wall fade" id="wall"></div></div>
+          <div class="ctrl">
+            <button onclick="stepPage(-1)" aria-label="Halaman sebelumnya">‹</button>
+            <div class="dots" id="dots"></div>
+            <button onclick="stepPage(1)" aria-label="Halaman berikutnya">›</button>
+            <button class="chip lb on" id="auto">⏸ Jalan Otomatis</button>
+            <div class="pbar"><i id="bar"></i></div>
+          </div>
+        </div>
+        <div class="floor"></div>
+      </section>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="ft">
+      <div class="row">
+        <div style="display: flex; gap: 16px; align-items: center">
+          <div>
+            <span class="lb ac" style="display: block">Ruang Eksibisi Aktif</span
+            ><span class="os" style="font-size: 18px" id="fRoom"></span>
+          </div>
+          <div class="ftl">
+            <button onclick="setRoom(room-1)" aria-label="Ruang sebelumnya">‹</button
+            ><button onclick="setRoom(room+1)" aria-label="Ruang berikutnya">›</button>
+          </div>
+        </div>
+        <span class="lb ol hide-m">SMA Negeri 1 Turen • Museum Virtual SMANERE</span>
+        <span class="lb ac" id="fCount"></span>
+      </div>
+    </footer>
+
+    <!-- ===== MODAL DOSSIER FOTO ===== -->
+    <div class="mo" id="mod">
+      <div class="mb">
+        <div class="mh">
+          <div>
+            <span class="lb ac" id="mAcc" style="display: block"></span>
+            <h2 id="mTit"></h2>
+          </div>
+          <button class="x" onclick="closeP()" aria-label="Tutup">✕</button>
+        </div>
+        <div class="mc">
+          <div class="mi"><img id="mImg" alt="" /></div>
+          <div>
+            <span class="lb ac">Keterangan Kuratorial</span>
+            <p class="mu" style="text-align: justify; margin-top: 4px" id="mKet"></p>
+            <div class="tbl">
+              <div><span class="ol lb">Judul:</span><span id="mJ"></span></div>
+              <div><span class="ol lb">Tahun:</span><span id="mT"></span></div>
+              <div><span class="ol lb">Ruang Pameran:</span><span id="mR"></span></div>
+              <div><span class="ol lb">Kode Arsip:</span><span id="mK"></span></div>
+              <div><span class="ol lb">Status Konservasi:</span><span class="ac">Tingkat A-1</span></div>
+            </div>
+            <div style="display: flex; gap: 8px">
+              <button class="btn g2" onclick="stepP(-1)">‹ Sebelumnya</button
+              ><button class="btn g2" onclick="stepP(1)">Berikutnya ›</button
+              ><button class="btn" style="flex: 1" onclick="closeP()">Kembali ke Ruang</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ===== DATA RUANG & FOTO =====
+      // Tiap foto: ["Judul", "Tahun", "Keterangan", "foto"]
+      //  - foto: URL gambar, mis. "foto/kegiatan1.jpg". Kosongkan "" untuk image holder.
+      // Tambah foto = tambah satu baris di items (halaman & tata letak dibuat otomatis, 3-6 foto per halaman).
+      // Tambah ruang = salin satu blok ruang.
+      const LOREM =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.";
+      const ROOMS = [
+        {
+          id: "kegiatan",
+          nama: "Ruang Kegiatan",
+          ikon: "🎭",
+          hue: 210,
+          eyebrow: "RUANG PAMERAN I",
+          judul: "JEJAK KEGIATAN & KEBERSAMAAN",
+          desc: "Lorem ipsum dolor sit amet. Rekaman momen kegiatan siswa dan warga sekolah dari masa ke masa.",
+          items: [
+            ["Kegiatan Sekolah", "2019", LOREM, "/images/pameran/kegiatan1.jpeg"],
+            ["Membatik", "2015", LOREM, "/images/pameran/kegiatan2.jpeg"],
+            ["Kegiatan Membatik", "20XX", LOREM, "/images/pameran/kegiatan3.jpeg"],
+            ["Wisuda", "2011", LOREM, "/images/pameran/kegiatan4.jpeg"],
+            ["Pentas Seni", "2012", LOREM, "/images/pameran/kegiatan5.jpeg"],
+          ],
+        },
+        {
+          id: "prestasi",
+          nama: "Ruang Prestasi",
+          ikon: "🏆",
+          hue: 40,
+          eyebrow: "RUANG PAMERAN II",
+          judul: "KEJAYAAN & PRESTASI",
+          desc: "Lorem ipsum dolor sit amet. Penghargaan dan capaian siswa maupun sekolah di berbagai tingkat.",
+          items: [
+            ["Piala Siswa", "2026", LOREM, "/images/pameran/prestasi1.jpeg"],
+            ["Juara Basket", "20XX", LOREM, "/images/pameran/prestasi2.jpeg"],
+            ["Lomba KIR", "20XX", LOREM, "/images/pameran/prestasi3.jpeg"],
+            ["Marching Band", "20XX", LOREM, "/images/pameran/prestasi4.jpeg"],
+          ],
+        },
+        {
+          id: "bangunan",
+          nama: "Ruang Bangunan",
+          ikon: "🏛",
+          hue: 190,
+          eyebrow: "RUANG PAMERAN III",
+          judul: "PERJALANAN GEDUNG & FASILITAS",
+          desc: "Lorem ipsum dolor sit amet. Perkembangan bangunan dan fasilitas sekolah sejak awal berdiri.",
+          items: [
+            ["Perpustakaan", "20XX", LOREM, "/images/pameran/bangunan1.jpeg"],
+            ["Gerbang Sekolah", "20XX", LOREM, "/images/pameran/bangunan2.jpeg"],
+            ["Ruang Osis", "20XX", LOREM, "/images/pameran/bangunan3.jpeg"],
+            ["Denah Sekolah", "20XX", LOREM, "/images/pameran/bangunan4.jpeg"],
+          ],
+        },
+        {
+          id: "dokumen",
+          nama: "Ruang Dokumen",
+          ikon: "📜",
+          hue: 25,
+          eyebrow: "RUANG PAMERAN IV",
+          judul: "ARSIP & DOKUMEN BERSEJARAH",
+          desc: "Lorem ipsum dolor sit amet. Naskah, piagam, dan dokumen penting yang tersimpan sebagai warisan.",
+          items: [
+            ["SK Pendirian Sekolah", "1991", LOREM, "/images/pameran/dokumen1.jpeg"],
+            ["Buku Induk Pertama", "1991", LOREM, "/images/pameran/dokumen2.jpeg"],
+            ["Piagam Penghargaan", "20XX", LOREM, "/images/pameran/dokumen3.jpeg"],
+            ["Naskah Himne Sekolah", "20XX", LOREM, "/images/pameran/dokumen4.jpeg"],
+            ["Foto Angkatan Pertama", "1991", LOREM, "/images/pameran/dokumen5.jpeg"],
+            ["Denah Sekolah", "20XX", LOREM, "/images/pameran/dokumen6.jpeg"],
+          ],
+        },
+      ];
+      const AUTO_MS = 9000; // lama tiap halaman sebelum geser otomatis (milidetik): makin besar makin pelan
+
+      // ===== TATA LETAK DINDING: [kolomMulai, kolomAkhir, barisMulai, barisAkhir] pada grid 12 x 6 =====
+      const TPL6 = [
+        [
+          [1, 4, 1, 5],
+          [1, 4, 5, 7],
+          [4, 9, 1, 4],
+          [4, 7, 4, 7],
+          [7, 9, 4, 7],
+          [9, 13, 1, 7],
+        ],
+        [
+          [1, 5, 1, 4],
+          [1, 3, 4, 7],
+          [3, 5, 4, 7],
+          [5, 8, 1, 7],
+          [8, 13, 1, 3],
+          [8, 13, 3, 7],
+        ],
+        [
+          [1, 7, 1, 4],
+          [7, 10, 1, 4],
+          [10, 13, 1, 4],
+          [1, 4, 4, 7],
+          [4, 9, 4, 7],
+          [9, 13, 4, 7],
+        ],
+      ];
+      const TPL = {
+        5: [
+          [1, 4, 1, 7],
+          [4, 9, 1, 4],
+          [4, 7, 4, 7],
+          [7, 9, 4, 7],
+          [9, 13, 1, 7],
+        ],
+        4: [
+          [1, 5, 1, 7],
+          [5, 9, 1, 4],
+          [5, 9, 4, 7],
+          [9, 13, 1, 7],
+        ],
+        3: [
+          [1, 7, 1, 7],
+          [7, 13, 1, 4],
+          [7, 13, 4, 7],
+        ],
+        2: [
+          [1, 7, 1, 7],
+          [7, 13, 1, 7],
+        ],
+        1: [[3, 11, 1, 7]],
+      };
+      const FRAME = ["g", "k", "p", "g", "p", "k"];
+
+      // ===== KODE (tidak perlu diubah) =====
+      const $ = (id) => document.getElementById(id);
+      const pad = (n) => String(n).padStart(2, "0");
+      const ph = (n, hue) =>
+        "data:image/svg+xml;utf8," +
+        encodeURIComponent(
+          `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' fill='hsl(${hue},45%,18%)'/><rect x='14' y='14' width='372' height='372' fill='none' stroke='hsl(${hue},70%,65%)' stroke-width='2' stroke-dasharray='10 8'/><circle cx='200' cy='170' r='46' fill='hsl(${hue},35%,32%)'/><path d='M110 300c0-60 40-90 90-90s90 30 90 90z' fill='hsl(${hue},35%,32%)'/><text x='200' y='340' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='20' fill='hsl(${hue},80%,80%)'>FOTO PAMERAN ${n}</text></svg>`,
+        );
+      let room = 0,
+        pg = 0,
+        auto = true,
+        elapsed = 0,
+        hover = false,
+        ci = 0,
+        busy = false,
+        PAGES = [];
+      const src = (r, i) => ROOMS[r].items[i][3] || ph(pad(i + 1), ROOMS[r].hue);
+      const modalOpen = () => $("mod").classList.contains("s");
+
+      // Bagi foto rata ke beberapa halaman (maks 6 foto per halaman)
+      function makePages(n) {
+        const P = Math.max(1, Math.ceil(n / 6)),
+          base = Math.floor(n / P),
+          extra = n % P;
+        let s = 0;
+        return Array.from({ length: P }, (_, k) => {
+          const c = base + (k < extra ? 1 : 0),
+            o = { s, c };
+          s += c;
+          return o;
+        });
+      }
+      function drawTabs() {
+        $("tabs").innerHTML = ROOMS.map(
+          (r, k) =>
+            `<button class="tab ${k == room ? "on" : ""}" onclick="setRoom(${k})"><i>${r.ikon}</i><b>${r.nama}</b><span>${r.items.length} foto</span></button>`,
+        ).join("");
+      }
+      function drawWall() {
+        const p = PAGES[pg],
+          tpl = p.c == 6 ? TPL6[(room + pg) % 3] : TPL[p.c];
+        let h = "";
+        for (let k = 0; k < p.c; k++) {
+          const i = p.s + k,
+            f = ROOMS[room].items[i],
+            a = tpl[k];
+          h += `<div class="fm ${FRAME[(i + room) % 6]}" style="--i:${k};grid-column:${a[0]}/${a[1]};grid-row:${a[2]}/${a[3]}" onclick="openP(${i})"><div class="bx"><div class="mt"><img src="${src(room, i)}" alt="${f[0]}"></div></div><span class="no lb">${pad(i + 1)}</span><div class="cp"><b>${f[0]}</b><span class="lb ac">${f[1]}</span></div></div>`;
+        }
+        $("wall").innerHTML = h;
+        $("dots").innerHTML = PAGES.map(
+          (_, k) =>
+            `<button class="${k == pg ? "on" : ""}" onclick="goPage(${k})" aria-label="Halaman ${k + 1}"></button>`,
+        ).join("");
+        $("fCount").textContent = `Halaman ${pg + 1}/${PAGES.length} • ${ROOMS[room].items.length} foto`;
+        elapsed = 0;
+        $("bar").style.width = "0";
+      }
+      function swap(fn) {
+        // transisi pelan antar halaman/ruang
+        if (busy) return;
+        busy = true;
+        const els = [$("wall"), $("intro")];
+        els.forEach((e) => e.classList.add("out"));
+        setTimeout(() => {
+          fn();
+          els.forEach((e) => e.classList.remove("out"));
+          busy = false;
+        }, 320);
+      }
+      function applyRoom(k, p) {
+        room = (k + ROOMS.length) % ROOMS.length;
+        const r = ROOMS[room];
+        PAGES = makePages(r.items.length);
+        pg = p == "last" ? PAGES.length - 1 : p || 0;
+        $("rEy").textContent = r.eyebrow;
+        $("rJudul").textContent = r.judul;
+        $("rDesc").textContent = r.desc;
+        $("fRoom").textContent = r.nama.toUpperCase();
+        drawTabs();
+        drawWall();
+      }
+      function setRoom(k) {
+        swap(() => applyRoom(k, 0));
+      }
+      function goPage(k) {
+        swap(() => {
+          pg = k;
+          drawWall();
+        });
+      }
+      function stepPage(d) {
+        // melewati batas halaman = pindah ke ruang berikutnya / sebelumnya
+        const n = pg + d;
+        if (n >= PAGES.length) swap(() => applyRoom(room + 1, 0));
+        else if (n < 0) swap(() => applyRoom(room - 1, "last"));
+        else goPage(n);
+      }
+      // Jalan otomatis: geser halaman pelan, lanjut ke ruang berikutnya, berputar terus
+      setInterval(() => {
+        if (!auto || hover || modalOpen() || busy) return;
+        elapsed += 100;
+        $("bar").style.width = Math.min(100, (elapsed / AUTO_MS) * 100) + "%";
+        if (elapsed >= AUTO_MS) stepPage(1);
+      }, 100);
+      $("auto").onclick = function () {
+        auto = !auto;
+        this.classList.toggle("on", auto);
+        this.textContent = (auto ? "⏸ " : "▶ ") + "Jalan Otomatis";
+      };
+      $("wall").onmouseenter = () => (hover = true);
+      $("wall").onmouseleave = () => (hover = false);
+
+      function openP(i) {
+        ci = i;
+        const f = ROOMS[room].items[i],
+          r = ROOMS[room];
+        $("mAcc").textContent = `DOSSIER FOTO #${pad(i + 1)} • ${r.nama.toUpperCase()}`;
+        $("mTit").textContent = f[0];
+        $("mKet").textContent = f[2];
+        $("mImg").src = src(room, i);
+        $("mJ").textContent = f[0];
+        $("mT").textContent = f[1];
+        $("mR").textContent = r.nama;
+        $("mK").textContent = `ARSIP-${r.id.toUpperCase()}-${pad(i + 1)}`;
+        $("mod").classList.add("s");
+        document.body.style.overflow = "hidden";
+      }
+      function stepP(d) {
+        const n = ROOMS[room].items.length;
+        openP((ci + d + n) % n);
+      }
+      function closeP() {
+        $("mod").classList.remove("s");
+        document.body.style.overflow = "";
+      }
+      $("mod").onclick = (e) => {
+        if (e.target.id == "mod") closeP();
+      };
+      addEventListener("keydown", (e) => {
+        const open = modalOpen();
+        if (e.key == "Escape") closeP();
+        else if (e.key == "ArrowRight") open ? stepP(1) : stepPage(1);
+        else if (e.key == "ArrowLeft") open ? stepP(-1) : stepPage(-1);
+        else if (e.key == " " && !open) {
+          e.preventDefault();
+          $("auto").click();
+        }
+      });
+      const h0 = ROOMS.findIndex((r) => r.id == location.hash.slice(1));
+      applyRoom(h0 < 0 ? 0 : h0, 0);
+    </script>
+  </body>
+</html>
